@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<head>
+  <title>Коллекция книг</title>
+  <style>
+    .main-table {
+      border-style: solid;
+      border-width: 1px;
+    }
+    td {
+      border-style: solid;
+      border-width: 1px;
+    }
+    form {
+      padding: 5px;
+      border-style: solid;
+      border-width: 1px;
+    }
+    form td {
+      border-style: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Коллекция книг</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>#</td>
+        <td>Автор</td>
+        <td>Название</td>
+        <td>Жанр</td>
+        <td>Год</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <script>
+    fetch("/books")
+      .then((res) => res.json())
+      .then((result) => {
+        for (let i = 0; i < result.length; i++) {
+          const newRow = document.createElement("tr");
+          newRow.innerHTML = `<td>${result[i].id}</td>
+                                    <td>${result[i].author}</td>
+                                    <td>${result[i].title}</td>
+                                    <td>${result[i].genre}</td>
+                                    <td>${result[i].year}</td>
+                                    <td><input type="button" value="Изменить" 
+                                        data-id="${result[i].id}" onclick="EditHandler(this)"/></td>
+                                    <td><input type="checkbox" data-id="${result[i].id}"/></td>`;
+          document.querySelector("#table-body").append(newRow);
+        }
+      });
+  </script>
+
+  <input id="add-book-button" type="button" value="Добавить запись" />
+  <input
+    id="delete-book-button"
+    type="button"
+    value="Удалить выделенные записи"
+  />
+  <form id="add-book-form" name="add-book" data-id="-1" style="display: none">
+    <h2>
+      Форма добавления/изменения данных<input
+        id="close-form-button"
+        type="button"
+        value="[X]"
+        style="font-size: 16pt"
+      />
+    </h2>
+    <table>
+      <tr>
+        <td><p>Автор</p></td>
+        <td><input id="author" type="text" /></td>
+      </tr>
+      <tr>
+        <td><p>Название</p></td>
+        <td>
+          <input id="title" type="text" />
+        </td>
+      </tr>
+      <tr>
+        <td><p>Жанр</p></td>
+        <td><input id="genre" type="text" /></td>
+      </tr>
+      <tr>
+        <td><p>Год</p></td>
+        <td><input id="year" type="text" /></td>
+      </tr>
+    </table>
+    <input id="confirm-button" type="submit" value="Добавить" />
+  </form>
+
+  <script src="/src/handlers.js"></script>
+</body>
